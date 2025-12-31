@@ -1,0 +1,83 @@
+<!-- EmailJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+  (function () {
+    emailjs.init("J7FD_m9BOvhPG-oo5"); // ✅ Public ID
+  })();
+
+  let showerStarted = false;
+  let naClickCount = 0;
+  let musicStarted = false;
+
+  function startEverything() {
+    startEmojiShower();
+    playMusic();
+    sendEmail(); // 💌 YES চাপলেই Gmail এ mail যাবে
+  }
+
+  function sendEmail() {
+    emailjs.send(
+      "service_pikpc7k",      // ✅ Service ID
+      "template_3o5zw1p",     // ✅ Template ID
+      {
+        message: "Someone pressed YES 💖 on your Love Page",
+        time: new Date().toLocaleString()
+      }
+    ).then(
+      function () {
+        console.log("✅ Email sent successfully!");
+      },
+      function (error) {
+        console.error("❌ Email failed:", error);
+      }
+    );
+  }
+
+  function playMusic() {
+    if (!musicStarted) {
+      const audio = document.getElementById('bgMusic');
+      audio.volume = 0.5;
+      audio.play().catch(() => {});
+      musicStarted = true;
+    }
+  }
+
+  function startEmojiShower() {
+    if (showerStarted) return;
+    showerStarted = true;
+
+    const emojis = ['❤️', '💘', '💖', '💗', '💕', '💞'];
+
+    setInterval(() => {
+      const emoji = document.createElement('div');
+      emoji.classList.add('emoji');
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      emoji.style.fontSize = (Math.random() * 20 + 25) + 'px';
+      document.body.appendChild(emoji);
+
+      setTimeout(() => emoji.remove(), 6000);
+    }, 150);
+  }
+
+  function moveNa() {
+    const naBtn = document.getElementById('naBtn');
+    naClickCount++;
+
+    if (naClickCount >= 5) {
+      naBtn.remove();
+      return;
+    }
+
+    const randX = Math.random() * (window.innerWidth - naBtn.offsetWidth);
+    const randY = Math.random() * (window.innerHeight - naBtn.offsetHeight);
+
+    naBtn.style.position = 'fixed';
+    naBtn.style.left = randX + 'px';
+    naBtn.style.top = randY + 'px';
+
+    playMusic();
+  }
+</script>
